@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    {{#unless allowRobots}}
+    <meta name="robots" content="noindex, nofollow" />
+    {{/unless}}
+
+    <title>{{title}}</title>
+
+    {{#each meta}}
+    <meta name="{{this.name}}" content="{{this.content}}" />
+    {{/each}}
+
+    <script type="module" src="/src/main.js"></script>
+  </head>
+  <body>
+    <header class="header">
+        <h1>Aura Log</h1>
+        <p>
+          <a href="/headaches.json">View raw data.</a>
+        </p>
+      </header>
+    <main class="flow">
+      <calendar-heatmap charttitle="Calendar View" theme="orange"></calendar-heatmap>
+      <bar-chart charttitle="Migraines by Day of Week"></bar-chart>
+      <histogram-chart charttitle="Migraines by Hour of Day"></histogram-chart>
+      <div class="pieGrid">
+        <pie-chart
+          logdata="triggers"
+          charttitle="Triggers"
+          chartsubtitle="Potential triggers to bring on the headache."
+        ></pie-chart>
+        <pie-chart
+          logdata="symptoms"
+          charttitle="Symptoms"
+          chartsubtitle="Symptoms or other feelings resulting from the headache."
+        ></pie-chart>
+        <pie-chart
+          logdata="pain_areas"
+          charttitle="Pain Areas"
+          chartsubtitle="Parts of the head where pain was felt."
+        ></pie-chart>
+        <pie-chart
+          logdata="medications"
+          charttitle="Medications"
+          chartsubtitle="Medication taken to remedy the headache."
+          disablelegend
+        ></pie-chart>
+        <pie-chart
+        logdata="sleep"
+        charttitle="Sleeping vs. Awake"
+        disablelegend></pie-chart>
+      </div>
+    </main>
+  </body>
+</html>

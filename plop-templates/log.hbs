@@ -1,0 +1,22 @@
+---
+date: '{{substring date 0 4}}-{{substring date 4 6}}-{{substring date 6 8}}T{{substring date 8 10}}:{{substring date 10 12}}'
+sleep: {{sleep}}
+triggers:
+{{#each triggers}}
+- {{this}}
+{{/each}}
+symptoms:
+{{#each symptoms}}
+- {{this}}
+{{/each}}
+pain_areas:
+{{#each pain_areas}}
+- {{this}}
+{{/each}}
+medications:
+{{#each medications}}
+- {{this}}
+{{/each}}
+---
+
+{{entry}}

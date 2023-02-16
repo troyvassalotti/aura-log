@@ -1,0 +1,31 @@
+{
+	"name": "aura-log",
+	"version": "1.0.0",
+	"type": "module",
+	"scripts": {
+		"build": "vite build",
+		"dev": "vite",
+		"lint:check": "npx dprint check",
+		"lint:fix": "npx dprint fmt",
+		"log": "plop log",
+		"prebuild": "npm run lint:fix",
+		"serve": "vite preview",
+		"start": "npm run dev"
+	},
+	"dependencies": {
+		"d3": "^7.8.2",
+		"gray-matter": "^4.0.3",
+		"highcharts": "^10.3.3",
+		"internmap": "^2.0.3",
+		"lit": "^2.6.1",
+		"minimist": "^1.2.8",
+		"plop": "^3.1.2",
+		"vite": "^4.1.1",
+		"vite-plugin-generate-file": "^0.0.4",
+		"vite-plugin-handlebars": "^1.6.0"
+	},
+	"devDependencies": {
+		"dprint": "^0.34.4",
+		"remark": "^14.0.2"
+	}
+}
