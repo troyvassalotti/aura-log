@@ -6,6 +6,7 @@ import mdPlugin from "./plugins/front-matter";
 import { data } from "./plugins/generate-files";
 
 export default defineConfig({
+	base: "/aura-log/", // Remove this for your own uses
 	plugins: [
 		mdPlugin(config.contentPluginOptions),
 		generateFile([
