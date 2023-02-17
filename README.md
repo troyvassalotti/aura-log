@@ -35,4 +35,3 @@ A few niceties are in `scripts` to handle repo-management type things, but they 
 Look, I made this for myself and thought it might be fun to share with others. I initially planned on creating an `npm` package out of it with all the features of a small framework, but decided that was far too much work than I cared for. So, this is what you get.
 
 I documented all the code with JSDocs because that's a thing I do, and I'm happy to answer any questions you may have (just open an issue), but please don't expect a ton of support. This thing is meant to be useable with a single config file, but extendable if you wish to make it that way.
-
