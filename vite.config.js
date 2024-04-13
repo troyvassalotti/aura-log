@@ -1,27 +1,24 @@
 import { defineConfig } from "vite";
 import generateFile from "vite-plugin-generate-file";
 import handlebars from "vite-plugin-handlebars";
-import config from "./auralog.config";
-import mdPlugin from "./plugins/front-matter";
-import { data } from "./plugins/generate-files";
+import config from "./auralog.config.js";
+import data from "./plugins/generate-files.js";
 
 export default defineConfig({
-	base: "/aura-log/", // Remove this for your own uses
-	plugins: [
-		mdPlugin(config.contentPluginOptions),
-		generateFile([
-			{
-				type: "json",
-				output: "headaches.json",
-				data: data,
-			},
-		]),
-		handlebars({
-			context: {
-				title: config?.html?.title,
-				meta: config?.html?.meta,
-				allowRobots: config?.allowRobots,
-			},
-		}),
-	],
+  plugins: [
+    generateFile([
+      {
+        type: "json",
+        output: "headaches.json",
+        data,
+      },
+    ]),
+    handlebars({
+      context: {
+        title: config?.html?.title,
+        meta: config?.html?.meta,
+        allowRobots: config?.allowRobots,
+      },
+    }),
+  ],
 });
