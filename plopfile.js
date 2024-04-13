@@ -1,4 +1,4 @@
-import config from "./auralog.config.js";
+import config from "../src/auralog.config.js";
 
 /**
  * Plop template helper to add substring support to handlebars template variables.
@@ -131,7 +131,7 @@ export default function (plop) {
       {
         type: "add",
         path: `${config.contentDir}/{{date}}.md`,
-        templateFile: "plop-templates/log.hbs",
+        templateFile: "src/plop-templates/log.hbs",
       },
     ],
   });

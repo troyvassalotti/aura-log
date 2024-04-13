@@ -1,8 +1,8 @@
 import { defineConfig } from "vite";
 import generateFile from "vite-plugin-generate-file";
 import handlebars from "vite-plugin-handlebars";
-import config from "./auralog.config.js";
-import data from "./plugins/generate-files.js";
+import config from "./src/auralog.config.js";
+import data from "./src/plugins/generate-files.js";
 
 export default defineConfig({
   plugins: [

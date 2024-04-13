@@ -1,6 +1,6 @@
 import * as d3 from "d3";
 import { css } from "lit";
-import { MONTHS, padString } from "../../lib/utils";
+import { MONTHS, padString } from "../lib/utils";
 import { Base } from "./Base";
 
 /**

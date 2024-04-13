@@ -1,4 +1,4 @@
-import { createSeriesSimple, DAYS, sortListByDayOfWeek } from "../../lib/utils";
+import { createSeriesSimple, DAYS, sortListByDayOfWeek } from "../lib/utils";
 import { Base } from "./Base";
 
 /**

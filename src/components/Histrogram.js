@@ -1,4 +1,4 @@
-import { mode } from "../../lib/utils";
+import { mode } from "../lib/utils";
 import { Base } from "./Base";
 
 /**

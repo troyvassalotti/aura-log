@@ -12,7 +12,7 @@ export default {
       },
     ],
   },
-  contentDir: "src/entries",
+  contentDir: "entries",
   medications: ["Excedrin", "Ubrelvy", "Eletriptan", "None"],
   painAreas: [
     "Front Left",
