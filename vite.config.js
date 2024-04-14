@@ -45,6 +45,6 @@ export default defineConfig({
 		open: "/",
 	},
 	server: {
-		open: "/node_modules/auralog/index.html",
+		open: "/node_modules/@troyv/auralog/index.html",
 	},
 });

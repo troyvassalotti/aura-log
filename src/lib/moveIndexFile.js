@@ -12,7 +12,7 @@ import {resolve, parse} from "node:path";
 
 const outputDir = "dist";
 const index = "index.html";
-const viteRootDirs = ["node_modules", "auralog"];
+const viteRootDirs = ["node_modules", "@troyv", "auralog"];
 const resolvedViteDirs = resolve(outputDir, ...viteRootDirs);
 
 const source = resolve(resolvedViteDirs, index);
