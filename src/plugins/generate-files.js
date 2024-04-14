@@ -4,7 +4,7 @@
 
 import { readdirSync, readFileSync } from "node:fs";
 import matter from "gray-matter";
-import config from "../auralog.config.js";
+import config from "../lib/AuralogConfig.js";
 
 /** Where all the logs are stored. */
 const dir = `./${config.contentDir}`;

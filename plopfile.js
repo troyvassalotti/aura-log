@@ -1,12 +1,12 @@
-import config from "./src/auralog.config.js";
+import config from "./src/lib/AuralogConfig.js";
 import { cwd } from "node:process";
 import { resolve } from "node:path";
 
 /**
  * Plop template helper to add substring support to handlebars template variables.
- * @param {string} text
- * @param {number} start
- * @param {number} end
+ * @param {string} text Raw text string.
+ * @param {number} start Where to start the substring.
+ * @param {number} end Where to cut the string at.
  * @returns {string}
  */
 export function templateSubstring(text, start, end) {
@@ -26,6 +26,8 @@ export function choiceValidation(answer) {
  * Check that the date is entered correctly.
  * @param {string} answer
  * @returns {string | boolean}
+ *
+ * @todo Actually validate it as a Date instead of basing it solely on string length.
  */
 export function dateValidation(answer) {
   if (answer.length > 12) {
@@ -99,13 +101,20 @@ if (!config.disableMedications) {
   });
 }
 
+/**
+ * @todo
+ * Figure out how to pass custom prompts into the plop template.
+ * Custom prompts are asked but the template has no way of knowing they exist,
+ * and if it did know they exist, how to format them.
+ *
+ */
 // Create any custom prompts if supplied
-if (config.customPrompts) {
-  const { customPrompts } = config;
-  for (const prompt of customPrompts) {
-    prompts.push(prompt);
-  }
-}
+// if (config.customPrompts) {
+//   const { customPrompts } = config;
+//   for (const prompt of customPrompts) {
+//     prompts.push(prompt);
+//   }
+// }
 
 // End with the journal prompts
 prompts.push(

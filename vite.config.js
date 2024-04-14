@@ -3,8 +3,9 @@ import { fileURLToPath } from "node:url";
 import { defineConfig } from "vite";
 import generateFile from "vite-plugin-generate-file";
 import handlebars from "vite-plugin-handlebars";
-import config from "./src/auralog.config.js";
+import config from "./src/lib/AuralogConfig.js";
 import data from "./src/plugins/generate-files.js";
+
 
 /** Directory of this package. */
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -33,6 +34,7 @@ export default defineConfig({
     handlebars({
       context: {
         title: config?.html?.title,
+        description: config?.html?.description,
         meta: config?.html?.meta,
         allowRobots: config?.allowRobots,
       },

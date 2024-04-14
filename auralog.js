@@ -1,11 +1,8 @@
 #!/usr/bin/env node
 
 /**
- * @todo Support custom config by merging default config with user config.
- * @todo If custom config supports changing the outDir, make sure all references to `dist` follow.
  * @todo Overhaul app to use Highcharts dashboard and Highcharts calendar heatmap, removing need for Lit or D3.
  * @todo Support merging vite configs.
- * @todo Fix issues in ploptemplate not being found.
  */
 
 import { Command } from "commander";
