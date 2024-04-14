@@ -1,37 +1,49 @@
+<!-- @format -->
+
 # Aura Log
 
-**Aura Log** is a starter kit for keeping track of your headaches and visualizing their patterns. It was originally started as - and continues to be a - way for me (Troy) to keep tabs on my migraines.
+**Aura Log** is a starter kit for keeping track of your headaches and visualizing their patterns. It was originally started as - and continues to be a - way for me to keep tabs on my migraines.
 
 ## How It Works
 
-Vite powers the build, Lit creates the components, Plop helps with the logging, and dprint does all the formatting.
+A directory of Markdown files serves as the database for all logs. Each file is named with the YYYYMMDDHHMM format when the migraine happened and contains YAML front matter with key:value pairs of meta information.
 
-Entries are Markdown files kept in `src/entries` with YAML front matter to store the data. It is possible to also write a journal entry as standard Markdown, but it isn't exposed by the app to any data sources by default.
-
-During build, those entries are parsed for their front matter and content, which creates JavaScript data that Vite can transform into a dataset, which components can accept and render.
+During build, those entries generate a JSON file that is fetched client-side and parsed for the dashboard to render.
 
 ## Getting Started
 
-Fork this repository, clone it locally, and `npm install` to get started. Sample entries are already present to give an overview of how it all pieces together, so run `npm start` to see the result in your browser.
+1. Install via npm: `npm install @troyv/auralog`.
+2. Run `npx auralog` to be presented with an interactive CLI for completing an entry.
+3. Run `npx auralog start` to preview a development server, or `npx auralog build` to bundle for production.
 
-`npm run log` will start the interactive logging process. You technically don't need to do it this way, but it streamlines the whole thing. You could choose to hand author your `.md` files, but then it's up to you to format them properly.
+> Use `npx auralog help` for a list of all available commands.
 
 ## Setup
 
-Settings are handled in `auralog.config.js`, where you can choose what options are available for plop. This package uses a plugin to render handlebars templates as the `index.html`, so config data will be used on your web page.
+Aura Log comes with a default set of options in the logging process, but can be configured by writing your own `auralog.config.js` file in your project root.
 
-The components are in `src/components` and aren't extensive are extendable out of the box, but if you choose to use this then you can customize them as you wish.
+```js
+// auralog.config.js
+// Check AuralogConfig.js for all the default options
+// User options are merged with or overwrite default options, depending on the type
+export default {
+	html: {
+		title: "Change the title of your web page.",
+		description: "Change the meta description.",
+		meta: [
+			{
+				name: "meta name",
+				content: "meta content",
+			},
+		],
+	},
+	contentDir: "path/to/logs",
+	medications: ["Medicine One", "Medicine Two"], // definitely add your own
+	painAreas: ["Where it hurts"],
+	parseJournal: true | false, // true if you want your journal entries output in the JSON
+	symptoms: ["Symptoms you experience"],
+	triggers: ["What", "might", "cause your migraines"],
+};
+```
 
-Styles are in `src/assets`, and utility functions are in `lib`.
-
-A few niceties are in `scripts` to handle repo-management type things, but they don't do anything related to Aura Log itself.
-
-`plugins` is where the code for the Markdown parser and `vite-plugin-generate-file` settings exist. That file plugin creates a `.json` file of your entries at the root of `dist`, for fun.
-
-`plop-templates` is where the Markdown file used for entries can be adjusted, but it gets its data from Plop and your interactive logging, so be mindful of changes to that.
-
-## Documentation
-
-Look, I made this for myself and thought it might be fun to share with others. I initially planned on creating an `npm` package out of it with all the features of a small framework, but decided that was far too much work than I cared for. So, this is what you get.
-
-I documented all the code with JSDocs because that's a thing I do, and I'm happy to answer any questions you may have (just open an issue), but please don't expect a ton of support. This thing is meant to be useable with a single config file, but extendable if you wish to make it that way.
+The dashboard uses a combination of Highcharts and D3 charts.

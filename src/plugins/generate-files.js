@@ -1,51 +1,79 @@
 /**
+ * @format
  * @file Data given to vite-plugin-generate-file
  */
 
-import { readdirSync, readFileSync } from "node:fs";
+import {readdirSync, readFileSync, existsSync} from "node:fs";
+import {cwd} from "node:process";
+import {resolve} from "node:path";
 import matter from "gray-matter";
 import config from "../lib/AuralogConfig.js";
 
 /** Where all the logs are stored. */
-const dir = `./${config.contentDir}`;
+const dir = resolve(cwd(), config.contentDir);
 
 /** Content files. */
-const content = readdirSync(dir, (err, files) => {
-  if (err) {
-    throw err;
-  }
+function fetchContentFiles() {
+	try {
+		if (existsSync(dir)) {
+			const content = readdirSync(dir, (err, files) => {
+				if (err) {
+					throw err;
+				}
 
-  return files;
-});
+				return files;
+			});
+
+			return content;
+		}
+	} catch (error) {
+		console.error(error);
+	}
+}
 
 /** Content parsed for their front matter. */
-const data = content.map((file) => {
-  const str = readFileSync(dir + "/" + file, "utf8");
-  const frontmatter = matter(str);
-  const { data, content } = frontmatter;
+function generateDateFile(files) {
+	if (!files) {
+		return;
+	}
 
-  // If there's no date from the front matter, create it from the file name
-  if (!data.date) {
-    /** The date & time string from the file name. */
-    const fileName = file.replace(/(\D+\/+)(\d+)(.md)/, "$2");
+	const data = files.map((file) => {
+		const str = readFileSync(resolve(dir, file), "utf8");
+		const frontmatter = matter(str);
+		const {data, content} = frontmatter;
 
-    const year = fileName.substring(0, 4); /* YYYY */
-    const month = fileName.substring(4, 6); /* MM */
-    const day = fileName.substring(6, 8); /* DD */
-    const isoDate = `${year}-${month}-${day}`; /* YYYY-MM-DD */
+		// If there's no date from the front matter, create it from the file name
+		if (!data.date) {
+			/** The date & time string from the file name. */
+			const fileName = file.replace(/(\D+\/+)(\d+)(.md)/, "$2");
 
-    const hour = fileName.substring(8, 10); /* HH */
-    const minutes = fileName.substring(10, 12); /* MM */
-    const isoTime = `${hour}:${minutes}`; /* HH:MM */
+			const year = fileName.substring(0, 4); /* YYYY */
+			const month = fileName.substring(4, 6); /* MM */
+			const day = fileName.substring(6, 8); /* DD */
+			const isoDate = `${year}-${month}-${day}`; /* YYYY-MM-DD */
 
-    data.date = `${isoDate}T${isoTime}`; /* YYYY-MM-DDTHH:MM */
-  }
+			const hour = fileName.substring(8, 10); /* HH */
+			const minutes = fileName.substring(10, 12); /* MM */
+			const isoTime = `${hour}:${minutes}`; /* HH:MM */
 
-  if (config.parseJournal) {
-    return { ...data, content };
-  }
+			data.date = `${isoDate}T${isoTime}`; /* YYYY-MM-DDTHH:MM */
+		}
 
-  return { ...data };
-});
+		if (config.parseJournal) {
+			return {...data, content};
+		}
+
+		return {...data};
+	});
+
+	return data;
+}
+
+function main() {
+	const files = fetchContentFiles();
+	return generateDateFile(files);
+}
+
+const data = main();
 
 export default data;

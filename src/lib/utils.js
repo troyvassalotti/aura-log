@@ -1,30 +1,32 @@
-import { InternMap } from "internmap";
+/** @format */
+
+import {InternMap} from "internmap";
 
 /** Months in the year. */
 export const MONTHS = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
+	"January",
+	"February",
+	"March",
+	"April",
+	"May",
+	"June",
+	"July",
+	"August",
+	"September",
+	"October",
+	"November",
+	"December",
 ];
 
 /** Days in the week. */
 export const DAYS = [
-  "Sunday",
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
+	"Sunday",
+	"Monday",
+	"Tuesday",
+	"Wednesday",
+	"Thursday",
+	"Friday",
+	"Saturday",
 ];
 
 /**
@@ -35,7 +37,7 @@ export const DAYS = [
  * @returns {String}
  */
 export function padString(value, padCount = 2, padWith = "0") {
-  return value.toString().padStart(padCount, padWith);
+	return value.toString().padStart(padCount, padWith);
 }
 
 /**
@@ -44,24 +46,24 @@ export function padString(value, padCount = 2, padWith = "0") {
  * @returns {string[]}
  */
 export function sortListByDayOfWeek(value) {
-  if (value) {
-    switch (value) {
-      case 0:
-        return DAYS[value];
-      case 1:
-        return DAYS[value];
-      case 2:
-        return DAYS[value];
-      case 3:
-        return DAYS[value];
-      case 4:
-        return DAYS[value];
-      case 5:
-        return DAYS[value];
-      case 6:
-        return DAYS[value];
-    }
-  }
+	if (value) {
+		switch (value) {
+			case 0:
+				return DAYS[value];
+			case 1:
+				return DAYS[value];
+			case 2:
+				return DAYS[value];
+			case 3:
+				return DAYS[value];
+			case 4:
+				return DAYS[value];
+			case 5:
+				return DAYS[value];
+			case 6:
+				return DAYS[value];
+		}
+	}
 }
 
 /**
@@ -71,16 +73,16 @@ export function sortListByDayOfWeek(value) {
  * @returns {any} Name-to-value pairings in an Array
  */
 export function createSeriesSimple(set, data) {
-  if (set && data) {
-    const dataMap = set.map((value) => [value, countInArray(data, value)]);
+	if (set && data) {
+		const dataMap = set.map((value) => [value, countInArray(data, value)]);
 
-    return dataMap.map((value) => {
-      return {
-        name: value[0],
-        y: value[1],
-      };
-    });
-  }
+		return dataMap.map((value) => {
+			return {
+				name: value[0],
+				y: value[1],
+			};
+		});
+	}
 }
 
 /**
@@ -90,7 +92,7 @@ export function createSeriesSimple(set, data) {
  * @returns {number} Total of that value in the array.
  */
 export function countInArray(array, what) {
-  return array.filter((item) => item == what).length;
+	return array.filter((item) => item == what).length;
 }
 
 /**
@@ -101,32 +103,32 @@ export function countInArray(array, what) {
  * @returns {number}
  */
 export function mode(values, valueof) {
-  const counts = new InternMap();
+	const counts = new InternMap();
 
-  if (valueof === undefined) {
-    for (let value of values) {
-      if (value != null && value >= value) {
-        counts.set(value, (counts.get(value) || 0) + 1);
-      }
-    }
-  } else {
-    let index = -1;
-    for (let value of values) {
-      if ((value = valueof(value, ++index, values)) != null && value >= value) {
-        counts.set(value, (counts.get(value) || 0) + 1);
-      }
-    }
-  }
+	if (valueof === undefined) {
+		for (let value of values) {
+			if (value != null && value >= value) {
+				counts.set(value, (counts.get(value) || 0) + 1);
+			}
+		}
+	} else {
+		let index = -1;
+		for (let value of values) {
+			if ((value = valueof(value, ++index, values)) != null && value >= value) {
+				counts.set(value, (counts.get(value) || 0) + 1);
+			}
+		}
+	}
 
-  let modeValue;
-  let modeCount = 0;
+	let modeValue;
+	let modeCount = 0;
 
-  for (const [value, count] of counts) {
-    if (count > modeCount) {
-      modeCount = count;
-      modeValue = value;
-    }
-  }
+	for (const [value, count] of counts) {
+		if (count > modeCount) {
+			modeCount = count;
+			modeValue = value;
+		}
+	}
 
-  return modeValue;
+	return modeValue;
 }

@@ -1,41 +1,51 @@
 {
-  "type": "module",
-  "name": "auralog",
-  "description": "Auralog helps you visualize your headaches.",
-  "version": "0.3.3",
-  "main": "./auralog.js",
-  "bin": {
-    "auralog": "./auralog.js"
-  },
-  "keywords": [
-    "migraines",
-    "headaches",
-    "health tracker",
-    "vite",
-    "data visualization"
-  ],
-  "homepage": "",
-  "license": "MIT",
-  "author": "Troy Vassalotti (https://www.troyv.dev/)",
-  "repository": "github:troyvassalotti/aura-log",
-  "scripts": {
-    "build": "npx auralog build",
-    "dev": "npx auralog",
-    "log": "npx auralog log",
-    "preview": "npx auralog preview",
-    "start": "npm run dev"
-  },
-  "dependencies": {
-    "commander": "^12.0.0",
-    "d3": "^7.9.0",
-    "gray-matter": "^4.0.3",
-    "highcharts": "^11.4.1",
-    "internmap": "^2.0.3",
-    "lit": "^3.1.2",
-    "lodash-es": "^4.17.21",
-    "plop": "^4.0.1",
-    "vite": "^5.2.8",
-    "vite-plugin-generate-file": "^0.1.1",
-    "vite-plugin-handlebars": "^2.0.0"
-  }
+	"type": "module",
+	"name": "@troyv/auralog",
+	"description": "Auralog helps you visualize your headaches.",
+	"version": "1.0.0",
+	"main": "./auralog.js",
+	"bin": {
+		"auralog": "./auralog.js"
+	},
+	"keywords": [
+		"migraines",
+		"headaches",
+		"health tracker",
+		"vite",
+		"data visualization"
+	],
+	"homepage": "https://auralog.troyv.dev/",
+	"license": "MIT",
+	"author": "Troy Vassalotti (https://www.troyv.dev/)",
+	"repository": "github:troyvassalotti/aura-log",
+	"scripts": {
+		"build": "npx auralog build",
+		"dev": "npx auralog",
+		"lint::prettier": "prettier --check .",
+		"lint::prettier-fix": "prettier --write .",
+		"lint::eslint": "eslint",
+		"lint::eslint-fix": "eslint --fix",
+		"log": "npx auralog log",
+		"preview": "npx auralog preview",
+		"start": "npm run dev"
+	},
+	"dependencies": {
+		"commander": "^12.0.0",
+		"d3": "^7.9.0",
+		"gray-matter": "^4.0.3",
+		"highcharts": "^11.4.1",
+		"internmap": "^2.0.3",
+		"lit": "^3.1.2",
+		"lodash-es": "^4.17.21",
+		"plop": "^4.0.1",
+		"vite": "^5.2.8",
+		"vite-plugin-generate-file": "^0.1.1",
+		"vite-plugin-handlebars": "^2.0.0"
+	},
+	"devDependencies": {
+		"@troyv/common-config": "^1.1.0",
+		"eslint": "^9.0.0",
+		"prettier": "^3.2.5"
+	},
+	"prettier": "@troyv/common-config/.prettierrc.json"
 }

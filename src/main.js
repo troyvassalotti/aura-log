@@ -1,3 +1,5 @@
+/** @format */
+
 import "./assets/style.css";
 
 import "./components/CalendarHeatmap";
