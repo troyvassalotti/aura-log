@@ -5,6 +5,12 @@ publish = "dist"
 [build.processing]
 skip_processing = true
 
+[[redirects]]
+from = "https://auralog.netlify.com/*"
+to = "https://auralog.troyv.dev/:splat"
+status = 301
+force = true
+
 [[headers]]
 for = "/*"
 [headers.values]
