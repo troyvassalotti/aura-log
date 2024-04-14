@@ -18,6 +18,11 @@ const destination = resolve(outputDir, index);
 const parsedDestination = parse(destination);
 
 export default function moveIndexFile() {
+  if (!existsSync(source)) {
+    console.log("Aura Log Ready!");
+    return;
+  };
+
   console.log(`Moving ${index} from ${source} to ${destination}.`);
 
   if (!existsSync(parsedDestination.dir)) {
@@ -36,4 +41,5 @@ export default function moveIndexFile() {
   });
 
   console.log("Move complete!");
+  console.log("Aura Log Ready!");
 }
