@@ -40,6 +40,9 @@ export default defineConfig({
       },
     }),
   ],
+  preview: {
+    open: "/"
+  },
   server: {
     open: "/node_modules/auralog/index.html",
   },
