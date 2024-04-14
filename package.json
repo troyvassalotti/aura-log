@@ -2,7 +2,7 @@
   "type": "module",
   "name": "auralog",
   "description": "Auralog helps you visualize your headaches.",
-  "version": "0.2.26",
+  "version": "0.3.0",
   "main": "./auralog.js",
   "bin": {
     "auralog": "./auralog.js"
