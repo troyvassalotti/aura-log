@@ -1,31 +1,41 @@
 {
-	"name": "aura-log",
-	"version": "1.0.0",
-	"type": "module",
-	"scripts": {
-		"build": "vite build",
-		"dev": "vite",
-		"lint:check": "npx dprint check",
-		"lint:fix": "npx dprint fmt",
-		"log": "plop log",
-		"prebuild": "npm run lint:fix",
-		"serve": "vite preview",
-		"start": "npm run dev"
-	},
-	"dependencies": {
-		"d3": "^7.8.5",
-		"gray-matter": "^4.0.3",
-		"highcharts": "^11.3.0",
-		"internmap": "^2.0.3",
-		"lit": "^3.1.2",
-		"minimist": "^1.2.8",
-		"plop": "^4.0.1",
-		"vite": "^5.0.13",
-		"vite-plugin-generate-file": "^0.1.1",
-		"vite-plugin-handlebars": "^2.0.0"
-	},
-	"devDependencies": {
-		"dprint": "^0.34.4",
-		"remark": "^14.0.2"
-	}
+  "type": "module",
+  "name": "auralog",
+  "description": "Auralog helps you visualize your headaches.",
+  "version": "0.3.3",
+  "main": "./auralog.js",
+  "bin": {
+    "auralog": "./auralog.js"
+  },
+  "keywords": [
+    "migraines",
+    "headaches",
+    "health tracker",
+    "vite",
+    "data visualization"
+  ],
+  "homepage": "",
+  "license": "MIT",
+  "author": "Troy Vassalotti (https://www.troyv.dev/)",
+  "repository": "github:troyvassalotti/aura-log",
+  "scripts": {
+    "build": "npx auralog build",
+    "dev": "npx auralog",
+    "log": "npx auralog log",
+    "preview": "npx auralog preview",
+    "start": "npm run dev"
+  },
+  "dependencies": {
+    "commander": "^12.0.0",
+    "d3": "^7.9.0",
+    "gray-matter": "^4.0.3",
+    "highcharts": "^11.4.1",
+    "internmap": "^2.0.3",
+    "lit": "^3.1.2",
+    "lodash-es": "^4.17.21",
+    "plop": "^4.0.1",
+    "vite": "^5.2.8",
+    "vite-plugin-generate-file": "^0.1.1",
+    "vite-plugin-handlebars": "^2.0.0"
+  }
 }

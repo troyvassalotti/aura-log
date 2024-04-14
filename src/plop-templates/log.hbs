@@ -3,7 +3,7 @@ date: '{{substring date 0 4}}-{{substring date 4 6}}-{{substring date 6 8}}T{{su
 sleep: {{sleep}}
 triggers:
 {{#each triggers}}
-- {{this}}
+- {{{this}}}
 {{/each}}
 symptoms:
 {{#each symptoms}}
@@ -19,4 +19,4 @@ medications:
 {{/each}}
 ---
 
-{{entry}}
+{{{entry}}}

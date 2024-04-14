@@ -1,0 +1,4 @@
+entries
+dist
+*.tgz
+auralog.config.js
