@@ -1,0 +1,13 @@
+[build]
+command = "npx auralog build"
+publish = "dist"
+
+[build.processing]
+skip_processing = true
+
+[[headers]]
+for = "/*"
+[headers.values]
+X-Content-Type-Options = "nosniff"
+X-Frame-Options = "SAMEORIGIN"
+X-XSS-Protection = "1"
