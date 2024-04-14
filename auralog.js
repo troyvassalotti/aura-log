@@ -1,9 +1,18 @@
 #!/usr/bin/env node
 
+/**
+ * @todo Support custom config by merging default config with user config.
+ * @todo If custom config supports changing the outDir, make sure all references to `dist` follow.
+ * @todo Overhaul app to use Highcharts dashboard and Highcharts calendar heatmap, removing need for Lit or D3.
+ * @todo Support merging vite configs.
+ */
+
 import { Command } from "commander";
 import { build, createServer, preview } from "vite";
 import { Plop, run } from "plop";
 import pkg from "./package.json" with { type: "json" };
+import auralogViteConfig from "./vite.config.js";
+import moveIndexFile from "./src/lib/moveIndexFile.js";
 
 const program = new Command();
 
@@ -14,18 +23,18 @@ program
   .description(
     "Build your Aura Log for production. Files are output into `dist`.",
   )
-  .action(() => {
-    build();
+  .action(async () => {
+    await build(auralogViteConfig);
+    moveIndexFile();
   });
 
 program
   .command("preview")
-  .description(
-    "Preview your Aura Log as production. Requires initial build first.",
-  )
+  .description("Preview your generated Aura Log. Requires initial build first.")
   .action(async () => {
-    const server = await preview();
-    console.log(`Listening on ${server.resolvedUrls.local}`);
+    const server = await preview(auralogViteConfig);
+    previewServer.printUrls();
+    previewServer.bindCLIShortcuts({ print: true });
   });
 
 program
@@ -33,9 +42,10 @@ program
   .alias("start")
   .description("Run the Aura Log dev server.")
   .action(async () => {
-    const server = await createServer();
+    const server = await createServer(auralogViteConfig);
     const start = await server.listen();
-    console.log(`Listening on ${start.resolvedUrls.local}`);
+    server.printUrls();
+    server.bindCLIShortcuts({ print: true });
   });
 
 /**
