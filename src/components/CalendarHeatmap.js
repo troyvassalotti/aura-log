@@ -94,6 +94,7 @@ export class CalendarHeatmap extends Base {
 	get #dates() {
 		const all = [];
 
+		/* eslint-disable-next-line */
 		for (const [key, value] of this.#values) {
 			all.push(parseInt(key));
 		}

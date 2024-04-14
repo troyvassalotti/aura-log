@@ -30,6 +30,8 @@ export class PieChart extends Base {
 				.map((value) => value[this.logdata])
 				.flat();
 		}
+
+		return [];
 	}
 
 	/**
