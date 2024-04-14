@@ -5,6 +5,7 @@
  * @todo If custom config supports changing the outDir, make sure all references to `dist` follow.
  * @todo Overhaul app to use Highcharts dashboard and Highcharts calendar heatmap, removing need for Lit or D3.
  * @todo Support merging vite configs.
+ * @todo Fix issues in ploptemplate not being found.
  */
 
 import { Command } from "commander";
@@ -13,7 +14,10 @@ import { Plop, run } from "plop";
 import pkg from "./package.json" with { type: "json" };
 import auralogViteConfig from "./vite.config.js";
 import moveIndexFile from "./src/lib/moveIndexFile.js";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 
+const __dirname = dirname(fileURLToPath(import.meta.url));
 const program = new Command();
 
 program.name(pkg.name).description(pkg.description).version(pkg.version);
@@ -43,7 +47,7 @@ program
   .description("Run the Aura Log dev server.")
   .action(async () => {
     const server = await createServer(auralogViteConfig);
-    const start = await server.listen();
+    await server.listen();
     server.printUrls();
     server.bindCLIShortcuts({ print: true });
   });
@@ -58,7 +62,7 @@ program
   .action(() => {
     Plop.prepare(
       {
-        configPath: "./plopfile.js",
+        configPath: resolve(__dirname, "plopfile.js"),
       },
       (env) => Plop.execute(env, run),
     );
