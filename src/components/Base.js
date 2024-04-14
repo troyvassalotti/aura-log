@@ -86,7 +86,7 @@ export class Base extends LitElement {
   }
 
   async connectedCallback() {
-    const response = await fetch("./headaches.json");
+    const response = await fetch("/headaches.json");
     const data = await response.json();
     this._data = data;
 

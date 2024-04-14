@@ -33,8 +33,8 @@ program
   .description("Preview your generated Aura Log. Requires initial build first.")
   .action(async () => {
     const server = await preview(auralogViteConfig);
-    previewServer.printUrls();
-    previewServer.bindCLIShortcuts({ print: true });
+    server.printUrls();
+    server.bindCLIShortcuts({ print: true });
   });
 
 program
