@@ -30,14 +30,10 @@
 			src="./src/main.js"></script>
 	</head>
 	<body>
-		<header class="header">
-			<h1>{{title}}</h1>
-			<p>
-				<a href="/headaches.json">View raw data.</a>
-			</p>
-		</header>
 		<main class="flow">
-			<calendar-heatmap charttitle="Calendar View"></calendar-heatmap>
+			<aura-log
+				src="/headaches.json"
+				apptitle="{{title}}"></aura-log>
 			<bar-chart charttitle="Migraines by Day of Week"></bar-chart>
 			<histogram-chart charttitle="Migraines by Hour of Day"></histogram-chart>
 			<pie-chart

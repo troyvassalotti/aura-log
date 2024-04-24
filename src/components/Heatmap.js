@@ -2,55 +2,48 @@
 
 import * as d3 from "d3";
 import {css} from "lit";
-import {MONTHS, padString} from "../lib/utils";
-import {Base} from "./Base";
+import {MONTHS, padString} from "../lib/utils.js";
+import Chart from "./Chart.js";
 
 /**
- * @tag calendar-heatmap
+ * @tag heat-map
  * @summary Displays a calendar heatmap.
  */
-export class CalendarHeatmap extends Base {
+export default class Heatmap extends Chart {
 	static properties = {
+		...super.properties,
 		theme: {type: String},
 	};
-	constructor() {
-		super();
-		this.lib = "d3";
-		this.theme = "purple";
-	}
 
-	static get styles() {
-		return [
-			super.styles,
-			css`
-				:host {
-					font-family: system-ui;
-					overflow: auto;
-				}
+	static styles = [
+		super.styles,
+		css`
+			:host {
+				overflow: auto;
+			}
 
-				#container {
-					inline-size: max(45rem, 100%);
-				}
+			#container {
+				inline-size: max(45rem, 100%);
+			}
 
-				text {
-					font-family: system-ui;
-				}
+			text {
+				font-family: system-ui;
+			}
 
-				text.yearLabel {
-					font-size: 0.75rem;
-				}
+			text.yearLabel {
+				font-size: 0.75rem;
+			}
 
-				.tooltip {
-					background-color: #ffffff;
-					border: 2px solid #000000;
-					border-radius: 4px;
-					color: #000000;
-					position: absolute;
-					padding: 0.25rem;
-				}
-			`,
-		];
-	}
+			.tooltip {
+				background-color: #ffffff;
+				border: 2px solid #000000;
+				border-radius: 4px;
+				color: #000000;
+				position: absolute;
+				padding: 0.25rem;
+			}
+		`,
+	];
 
 	/**
 	 * Tooltip Element
@@ -61,50 +54,18 @@ export class CalendarHeatmap extends Base {
 	}
 
 	/**
-	 * An array of date and time for each headache.
-	 * It takes the master data's Date value and reduces it to a [YYYY-MM-DD, HH:MM] array from its original YYYYMMDDHHMM format.
-	 * @returns {Map<string, string>}
-	 * @private
-	 */
-	get #values() {
-		return new Map(
-			this._data.map((value) => {
-				const {date} = value;
-				const dateObject = new Date(date);
-
-				const year = dateObject.getFullYear();
-				const month = padString(dateObject.getMonth() + 1);
-				const day = padString(dateObject.getDate());
-				const fullDate = `${year}-${month}-${day}`;
-
-				const hours = dateObject.getHours();
-				const minutes = dateObject.getMinutes();
-				const fullTime = `${padString(hours)}:${padString(minutes)}`;
-
-				return [fullDate, fullTime];
-			}),
-		);
-	}
-
-	/**
 	 * The earliest and latest + 1 year of the dataset.
 	 * @returns {{start: number, end: number}}
-	 * @private
 	 */
-	get #dates() {
-		const all = [];
-
-		/* eslint-disable-next-line */
-		for (const [key, value] of this.#values) {
-			all.push(parseInt(key));
-		}
-
-		const min = Math.min.apply(null, all);
-		const max = Math.max.apply(null, all);
+	get range() {
+		const firstYear = new Date(this.data[0].date).getUTCFullYear();
+		const lastYear = new Date(
+			this.data[this.data.length - 1].date,
+		).getUTCFullYear();
 
 		return {
-			start: min,
-			end: max + 1,
+			start: firstYear,
+			end: lastYear + 1,
 		};
 	}
 
@@ -159,7 +120,21 @@ export class CalendarHeatmap extends Base {
 	 * @param data
 	 * @private
 	 */
-	#createHeatmap(data) {
+	createHeatmap(raw) {
+		const data = raw.map((value) => {
+			const {date} = value;
+			const dateObject = new Date(date);
+			const iso = dateObject.toISOString();
+			const yyyymmdd = iso.substring(0, 10);
+			const time = iso.substring(11, 16);
+
+			return {
+				yyyymmdd,
+				time,
+				date: dateObject,
+			};
+		});
+
 		const theme = {
 			width: 960,
 			height: 150,
@@ -179,7 +154,7 @@ export class CalendarHeatmap extends Base {
 		const svg = d3
 			.select(this.chartContainer)
 			.selectAll("svg")
-			.data(d3.range(this.#dates.start, this.#dates.end))
+			.data(d3.range(this.range.start, this.range.end))
 			.enter()
 			.append("svg")
 			.attr("viewBox", `0 0 ${theme.width} ${theme.height}`)
@@ -217,7 +192,15 @@ export class CalendarHeatmap extends Base {
 				(dataValue) => dataValue.getDay() * theme.cellSize,
 			) /* Position it on the Y axis */
 			.datum(d3.timeFormat("%Y-%m-%d"))
-			.attr("fill", (dataValue) => color(parseInt(data.get(dataValue))));
+			.attr("fill", (dataValue) => {
+				const found = data.find((entry) => entry.yyyymmdd == dataValue);
+
+				if (!found) {
+					return undefined;
+				}
+
+				return color(found.date.getHours());
+			});
 
 		// Create the borders between the months
 		svg
@@ -290,7 +273,7 @@ export class CalendarHeatmap extends Base {
 						tooltip.style("display", "block").html(
 							`<b>Date:</b> ${date}
 							<br>
-							<b>Time:</b> ${data.get(date)}`,
+							<b>Time:</b> ${data.find((entry) => entry.yyyymmdd === date).time}`,
 						);
 
 						const rect = this.tooltipElement.getBoundingClientRect();
@@ -310,9 +293,9 @@ export class CalendarHeatmap extends Base {
 		});
 	}
 
-	_initChart() {
-		this.#createHeatmap(this.#values);
+	firstUpdated() {
+		this.createHeatmap(this.data);
 	}
 }
 
-window.customElements.define("calendar-heatmap", CalendarHeatmap);
+window.customElements.define("heat-map", Heatmap);
