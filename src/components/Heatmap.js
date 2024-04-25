@@ -2,7 +2,7 @@
 
 import * as d3 from "d3";
 import {css} from "lit";
-import {MONTHS, padString} from "../lib/utils.js";
+import {MONTHS} from "../lib/utils.js";
 import Chart from "./Chart.js";
 
 /**
@@ -11,7 +11,6 @@ import Chart from "./Chart.js";
  */
 export default class Heatmap extends Chart {
 	static properties = {
-		...super.properties,
 		theme: {type: String},
 	};
 
@@ -46,14 +45,6 @@ export default class Heatmap extends Chart {
 	];
 
 	/**
-	 * Tooltip Element
-	 * @type {HTMLElement}
-	 */
-	get tooltipElement() {
-		return this.renderRoot?.querySelector(".tooltip");
-	}
-
-	/**
 	 * The earliest and latest + 1 year of the dataset.
 	 * @returns {{start: number, end: number}}
 	 */
@@ -70,11 +61,19 @@ export default class Heatmap extends Chart {
 	}
 
 	/**
+	 * Tooltip Element
+	 * @type {HTMLElement}
+	 */
+	get tooltipElement() {
+		return this.renderRoot?.querySelector(".tooltip");
+	}
+
+	/**
 	 * Theme for the chart based on the theme prop.
 	 * @param {string} theme
 	 * @returns {string[]} Color palette.
 	 */
-	#chooseTheme(theme) {
+	static selectTheme(theme) {
 		switch (theme) {
 			case "orange":
 				return [
@@ -115,42 +114,54 @@ export default class Heatmap extends Chart {
 		}
 	}
 
+	static prepareData(rawData) {
+		return rawData.map((value) => {
+			const {date} = value;
+			const dateObject = new Date(date);
+			const iso = dateObject.toISOString();
+			const yyyymmdd = iso.substring(0, 10);
+			const time = iso.substring(11, 16);
+			const intlDate = new Intl.DateTimeFormat(undefined, {
+				day: "numeric",
+				month: "long",
+				weekday: "long",
+				year: "numeric",
+				hour: "numeric",
+				minute: "numeric",
+			});
+
+			return {
+				yyyymmdd,
+				time,
+				date: dateObject,
+				dateString: intlDate.format(dateObject),
+			};
+		});
+	}
+
 	/**
 	 * Use D3 to create a heatmap from the component's values.
 	 * @param data
 	 * @private
 	 */
 	createHeatmap(raw) {
-		const data = raw.map((value) => {
-			const {date} = value;
-			const dateObject = new Date(date);
-			const iso = dateObject.toISOString();
-			const yyyymmdd = iso.substring(0, 10);
-			const time = iso.substring(11, 16);
-
-			return {
-				yyyymmdd,
-				time,
-				date: dateObject,
-			};
-		});
-
+		const data = Heatmap.prepareData(raw);
 		const theme = {
-			width: 960,
-			height: 150,
 			cellSize: 17,
-			mainStrokeColor: "currentColor",
+			colorPalette: Heatmap.selectTheme(this.theme),
 			defaultStrokeWidth: "0.1px",
-			hoverStrokeWidth: "1px",
-			outerBorderWidth: "1px",
-			colorPalette: this.#chooseTheme(this.theme),
 			gridFill: "none",
+			height: 150,
+			hoverStrokeWidth: "1px",
+			mainStrokeColor: "currentColor",
+			outerBorderWidth: "1px",
+			width: 960,
 		};
 
-		/** Create the color scale used for highlighting days. */
+		/** Color scale used for highlighting days. */
 		const color = d3.scaleQuantize().domain([0, 23]).range(theme.colorPalette);
 
-		/** Creates the containing `<svg>` for each yearly calendar view. */
+		// Creates the containing `<svg>` and outer `<g>` for each year
 		const svg = d3
 			.select(this.chartContainer)
 			.selectAll("svg")
@@ -162,15 +173,15 @@ export default class Heatmap extends Chart {
 			.append("g")
 			.attr(
 				"transform",
-				`translate(${(theme.width - theme.cellSize * 53) / 2}, ${
+				`translate(${(theme.width - theme.cellSize * (365 / 7)) / 2}, ${
 					theme.height - theme.cellSize * 7 - 1
 				})`,
-			); /* Positions it in view */
+			);
 
-		// Creates the rectangles representing days in each calendar
+		// Creates the months & rectangles representing days in each calendar
 		svg
 			.append("g")
-			.attr("fill", theme.gridFill) /* Make the underlying grid transparent */
+			.attr("fill", theme.gridFill)
 			.attr("stroke", theme.mainStrokeColor)
 			.attr("stroke-width", theme.defaultStrokeWidth)
 			.selectAll("rect")
@@ -186,11 +197,8 @@ export default class Heatmap extends Chart {
 				"x",
 				(dataValue) =>
 					d3.timeWeek.count(d3.timeYear(dataValue), dataValue) * theme.cellSize,
-			) /* Position it on the X axis */
-			.attr(
-				"y",
-				(dataValue) => dataValue.getDay() * theme.cellSize,
-			) /* Position it on the Y axis */
+			)
+			.attr("y", (dataValue) => dataValue.getDay() * theme.cellSize)
 			.datum(d3.timeFormat("%Y-%m-%d"))
 			.attr("fill", (dataValue) => {
 				const found = data.find((entry) => entry.yyyymmdd == dataValue);
@@ -217,14 +225,15 @@ export default class Heatmap extends Chart {
 			.attr("class", "month")
 			.attr("d", function (dataValue) {
 				const t1 = new Date(
-						dataValue.getFullYear(),
-						dataValue.getMonth() + 1,
-						0,
-					),
-					d0 = dataValue.getDay(),
-					w0 = d3.timeWeek.count(d3.timeYear(dataValue), dataValue),
-					d1 = t1.getDay(),
-					w1 = d3.timeWeek.count(d3.timeYear(t1), t1);
+					dataValue.getFullYear(),
+					dataValue.getMonth() + 1,
+					0,
+				);
+				const d0 = dataValue.getDay();
+				const w0 = d3.timeWeek.count(d3.timeYear(dataValue), dataValue);
+				const d1 = t1.getDay();
+				const w1 = d3.timeWeek.count(d3.timeYear(t1), t1);
+
 				return `M${
 					(w0 + 1) * theme.cellSize
 				}, ${d0 * theme.cellSize}H${w0 * theme.cellSize}V${7 * theme.cellSize}H${w1 * theme.cellSize}V${(d1 + 1) * theme.cellSize}H${(w1 + 1) * theme.cellSize}V0H${(w0 + 1) * theme.cellSize}Z`;
@@ -267,33 +276,32 @@ export default class Heatmap extends Chart {
 		this.chartContainer.querySelectorAll(".day").forEach((day) => {
 			if (day.hasAttribute("fill")) {
 				d3.select(day)
-					.on("mouseover", (evt) => {
-						const date = d3.select(evt.target).datum();
-						d3.select(this).attr("stroke-width", theme.hoverStrokeWidth);
-						tooltip.style("display", "block").html(
-							`<b>Date:</b> ${date}
-							<br>
-							<b>Time:</b> ${data.find((entry) => entry.yyyymmdd === date).time}`,
+					.on("mouseover", (event) => {
+						const date = d3.select(event.target).datum();
+						const pointDate = data.find((entry) => entry.yyyymmdd === date);
+
+						tooltip.style("display", "block");
+						tooltip.html(pointDate.dateString
 						);
 
 						const rect = this.tooltipElement.getBoundingClientRect();
 						const left =
-							evt.pageX > window.innerWidth - rect.width
-								? evt.pageX - rect.width
-								: evt.pageX + 10;
-						const top = evt.pageY - 10;
+							event.pageX > window.innerWidth - rect.width
+								? event.pageX - rect.width
+								: event.pageX + 10;
+						const top = event.pageY - 10;
 
 						tooltip.style("top", top + "px").style("left", left + "px");
 					})
 					.on("mouseout", function () {
-						d3.select(this).attr("stroke-width", theme.defaultStrokeWidth);
 						tooltip.style("display", "none");
 					});
 			}
 		});
 	}
 
-	firstUpdated() {
+  /** @override */
+	init() {
 		this.createHeatmap(this.data);
 	}
 }

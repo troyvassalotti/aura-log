@@ -1,9 +1,9 @@
 /** @format */
 
 import {html} from "lit";
-import AuraLogElement from "./AuraLogElement.js";
+import AuralogElement from "./AuralogElement.js";
 
-export default class Chart extends AuraLogElement {
+export default class Chart extends AuralogElement {
 	/**
 	 * Chart container element.
 	 * @returns {HTMLElement}
@@ -12,7 +12,16 @@ export default class Chart extends AuraLogElement {
 		return this.renderRoot.querySelector("#container");
 	}
 
+  /** @protected */
 	render() {
-		return html` <div id="container"></div> `;
+		return html`<div id="container"></div>`;
 	}
+
+  /** @abstract */
+  init() {}
+
+  /** @protected */
+  firstUpdated() {
+    this.init();
+  }
 }

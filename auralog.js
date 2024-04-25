@@ -10,7 +10,7 @@ import {build, createServer, preview} from "vite";
 import {Plop, run} from "plop";
 import pkg from "./package.json" with {type: "json"};
 import auralogViteConfig from "./vite.config.js";
-import moveIndexFile from "./src/lib/moveIndexFile.js";
+import MoveIndexFile from "./src/lib/MoveIndexFile.js";
 import {dirname, resolve} from "node:path";
 import {fileURLToPath} from "node:url";
 
@@ -42,7 +42,7 @@ program
 	)
 	.action(async () => {
 		await build(auralogViteConfig);
-		moveIndexFile();
+		MoveIndexFile.move();
 	});
 
 program

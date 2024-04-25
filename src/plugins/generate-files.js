@@ -23,7 +23,7 @@ function fetchContentFiles() {
 
 				return files;
 			});
-
+      
 			return content;
 		}
 	} catch (error) {
@@ -37,13 +37,16 @@ function generateDateFile(files) {
 		return;
 	}
 
-	const data = files.map((file) => {
+	return files.map((file) => {
 		const str = readFileSync(resolve(dir, file), "utf8");
 		const frontmatter = matter(str);
 		const {data, content} = frontmatter;
 
+    // DO NOT try and edit `data` directly because it introduces bugs where dates are wrong
+    let finalObj = Object.assign({}, data);
+
 		// If there's no date from the front matter, create it from the file name
-		if (!data.date) {
+		if (!finalObj.date) {
 			/** The date & time string from the file name. */
 			const fileName = file.replace(/(\D+\/+)(\d+)(.md)/, "$2");
 
@@ -56,17 +59,15 @@ function generateDateFile(files) {
 			const minutes = fileName.substring(10, 12); /* MM */
 			const isoTime = `${hour}:${minutes}`; /* HH:MM */
 
-			data.date = `${isoDate}T${isoTime}`; /* YYYY-MM-DDTHH:MM */
+      finalObj.date = `${isoDate}T${isoTime}`; /* YYYY-MM-DDTHH:MM */
 		}
 
 		if (config.parseJournal) {
-			return {...data, content};
+			return {...finalObj, content};
 		}
 
-		return {...data};
+		return finalObj;
 	});
-
-	return data;
 }
 
 function main() {

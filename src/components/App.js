@@ -2,10 +2,10 @@
 
 import {html} from "lit";
 import {Task} from "@lit/task";
-import AuraLogElement from "./AuraLogElement.js";
+import AuralogElement from "./AuralogElement.js";
 import "./Heatmap.js";
 
-export default class App extends AuraLogElement {
+export default class App extends AuralogElement {
 	static properties = {
 		src: {type: String},
 		appTitle: {type: String},

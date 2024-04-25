@@ -1,6 +1,6 @@
 /** @format */
 
-import {mode} from "../lib/utils";
+import { mode } from "d3";
 import {Base} from "./Base";
 
 /**
