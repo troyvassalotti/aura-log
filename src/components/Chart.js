@@ -14,7 +14,7 @@ export default class Chart extends AuralogElement {
 
 	/** @protected */
 	render() {
-		return html`<div id="container"></div>`;
+		return html`<div id="container" class="highcharts-light"></div>`;
 	}
 
 	/** @abstract */

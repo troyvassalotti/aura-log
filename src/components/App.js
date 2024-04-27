@@ -4,6 +4,7 @@ import {html} from "lit";
 import {Task} from "@lit/task";
 import AuralogElement from "./AuralogElement.js";
 import "./Heatmap.js";
+import "./Dashboard.js";
 
 export default class App extends AuralogElement {
 	static properties = {
@@ -35,6 +36,7 @@ export default class App extends AuralogElement {
 					<heat-map
 						.data=${data}
 						theme="blue"></heat-map>
+					<dash-board></dash-board>
 				</div>
 			`,
 			error: (e) => html`<p>Error: ${e}</p>`,
