@@ -36,7 +36,7 @@ export default class App extends AuralogElement {
 					<heat-map
 						.data=${data}
 						theme="blue"></heat-map>
-					<dash-board></dash-board>
+					<dash-board .data=${data}></dash-board>
 				</div>
 			`,
 			error: (e) => html`<p>Error: ${e}</p>`,

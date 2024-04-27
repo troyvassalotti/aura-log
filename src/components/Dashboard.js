@@ -3,254 +3,94 @@
 import Highcharts from "highcharts";
 import Accessibility from "highcharts/modules/accessibility";
 import Histogram from "highcharts/modules/histogram-bellcurve";
-import Dashboards from "@highcharts/dashboards";
-import DataGrid from "@highcharts/dashboards/datagrid";
-import LayoutModule from "@highcharts/dashboards/modules/layout";
 import highchartsCSS from "highcharts/css/highcharts.css?inline";
-import dashboardsCSS from "@highcharts/dashboards/css/dashboards.css?inline";
-import datagridCSS from "@highcharts/dashboards/css/datagrid.css?inline";
-import Chart from "./Chart.js";
-import {unsafeCSS} from "lit";
+import {unsafeCSS, html} from "lit";
+import AuralogElement from "./AuralogElement.js";
+import {
+	uniqueSorted,
+	sortListByDayOfWeek,
+	createSeriesSimple,
+	DAYS,
+} from "../lib/utils.js";
 
 Accessibility(Highcharts);
 Histogram(Highcharts);
 
-Dashboards.HighchartsPlugin.custom.connectHighcharts(Highcharts);
-Dashboards.DataGridPlugin.custom.connectDataGrid(DataGrid);
-
-Dashboards.PluginHandler.addPlugin(Dashboards.HighchartsPlugin);
-Dashboards.PluginHandler.addPlugin(Dashboards.DataGridPlugin);
-
-LayoutModule(Dashboards);
-
-export default class Dashboard extends Chart {
+export default class Dashboard extends AuralogElement {
 	static get styles() {
-		console.log(highchartsCSS);
-		return [
-			super.styles,
-			unsafeCSS(highchartsCSS),
-			unsafeCSS(dashboardsCSS),
-			unsafeCSS(datagridCSS),
-		];
+		return [super.styles, unsafeCSS(highchartsCSS)];
 	}
 
-	/** @override */
-	init() {
-		const csvData = document.getElementById("csv").innerText;
+	createBarChartData() {
+		const data = Object.values(this.data);
+		const values = data.map((value) => new Date(value.date).getDay());
+		const unique = uniqueSorted(values);
 
-		Dashboards.board(
-			this.chartContainer,
-			{
-				dataPool: {
-					connectors: [
-						{
-							id: "sample",
-							type: "CSV",
-							options: {
-								csv: csvData,
-								firstRowAsNames: true,
-							},
-						},
-					],
-				},
+		const days = values.map((value) => sortListByDayOfWeek(value));
+		const filteredDays = unique.map((value) => sortListByDayOfWeek(value));
 
-				gui: {
-					layouts: [
-						{
-							id: "layout-1",
-							rows: [
-								{
-									cells: [
-										{
-											id: "db-col-0-nolayout",
-										},
-										{
-											id: "db-col-1-layout",
-											layout: {
-												rows: [
-													{
-														cells: [
-															{
-																id: "db-col-1-row-0",
-															},
-														],
-													},
-													{
-														cells: [
-															{
-																id: "db-col-1-row-1A",
-																width: "1/3",
-															},
-															{
-																id: "db-col-1-row-1B-layout",
-																layout: {
-																	rows: [
-																		{
-																			cells: [
-																				{
-																					id: "db-col-1-row-1B-row-0",
-																				},
-																			],
-																		},
-																		{
-																			cells: [
-																				{
-																					id: "db-col-1-row-1B-row-1A",
-																				},
-																				{
-																					id: "db-col-1-row-1B-row-1B",
-																				},
-																			],
-																		},
-																	],
-																},
-															},
-														],
-													},
-													{
-														cells: [
-															{
-																id: "db-col-1-row-2",
-															},
-														],
-													},
-												],
-											},
-										},
-										{
-											id: "db-col-2-nolayout",
-										},
-									],
-								},
-							],
-						},
-					],
-				},
-				components: [
-					{
-						renderTo: "db-col-0-nolayout",
-						type: "Highcharts",
-						connector: {
-							id: "sample",
-						},
-						sync: {
-							highlight: true,
-						},
-						title: {
-							text: "Column 0",
-						},
-						chartOptions: {
-							xAxis: {
-								type: "category",
-							},
-							title: {
-								text: "",
-							},
-							chart: {
-								type: "column",
-							},
-						},
-					},
-					{
-						renderTo: "db-col-1-row-0",
-						type: "HTML",
+		return createSeriesSimple(filteredDays, days);
+	}
 
-						title: {
-							text: "Column 1",
-						},
-						elements: [
-							{
-								tagName: "p",
-								style: {
-									"text-align": "center",
-								},
-								textContent: "1 x nested",
-							},
-						],
-					},
-					{
-						renderTo: "db-col-1-row-1A",
-						type: "HTML",
-						elements: [
-							{
-								tagName: "p",
-								style: {
-									"text-align": "center",
-								},
-								textContent: "1 x nested",
-							},
-						],
-					},
-					{
-						renderTo: "db-col-1-row-1B-row-0",
-						type: "HTML",
-						elements: [
-							{
-								tagName: "p",
-								style: {
-									"text-align": "center",
-								},
-								textContent: "2 x nested",
-							},
-						],
-					},
-					{
-						renderTo: "db-col-1-row-1B-row-1A",
-						type: "HTML",
-						elements: [
-							{
-								tagName: "p",
-								style: {
-									"text-align": "center",
-								},
-								textContent: "2 x nested",
-							},
-						],
-					},
-					{
-						renderTo: "db-col-1-row-1B-row-1B",
-						type: "HTML",
-						elements: [
-							{
-								tagName: "p",
-								style: {
-									"text-align": "center",
-								},
-								textContent: "2 x nested",
-							},
-						],
-					},
+	createPieChartData(category) {
+		let values = category
+			? Object.values(this.data)
+					.map((value) => value[category])
+					.flat(Infinity)
+			: [];
 
-					{
-						renderTo: "db-col-1-row-2",
-						type: "HTML",
-						elements: [
-							{
-								tagName: "p",
-								style: {
-									"text-align": "center",
-								},
-								textContent: "1 x nested",
-							},
-						],
-					},
-					{
-						renderTo: "db-col-2-nolayout",
-						type: "DataGrid",
-						connector: {
-							id: "sample",
-						},
-						title: {
-							text: "Column 2",
-						},
-						sync: {
-							highlight: true,
-						},
-					},
-				],
+		const unique = uniqueSorted(values);
+
+		return createSeriesSimple(unique, values);
+	}
+
+	get barChartOptions() {
+		return {
+			chart: {
+				type: "bar",
 			},
-			true,
-		);
+			legend: {
+				enabled: false,
+			},
+			series: [
+				{
+					name: "Headaches",
+					data: this.createBarChartData(),
+				},
+			],
+			title: {
+				text: "Migraines by Day of Week",
+			},
+			xAxis: {
+				categories: DAYS,
+				crosshair: true,
+			},
+			yAxis: {
+				title: {
+					text: "Occurrences",
+				},
+			},
+		};
+	}
+
+	get barChartContainer() {
+		return this.renderRoot.querySelector("#bar");
+	}
+
+	render() {
+		return html`
+			<div class="dashboard highcharts-light">
+				<div class="row">
+					<div
+						class="column"
+						id="bar"></div>
+				</div>
+			</div>
+		`;
+	}
+
+	firstUpdated() {
+		Highcharts.chart(this.barChartContainer, this.barChartOptions);
 	}
 }
 
