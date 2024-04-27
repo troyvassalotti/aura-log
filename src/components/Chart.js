@@ -12,16 +12,16 @@ export default class Chart extends AuralogElement {
 		return this.renderRoot.querySelector("#container");
 	}
 
-  /** @protected */
+	/** @protected */
 	render() {
 		return html`<div id="container"></div>`;
 	}
 
-  /** @abstract */
-  init() {}
+	/** @abstract */
+	init() {}
 
-  /** @protected */
-  firstUpdated() {
-    this.init();
-  }
+	/** @protected */
+	firstUpdated() {
+		this.init();
+	}
 }

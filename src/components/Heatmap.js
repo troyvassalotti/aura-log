@@ -2,7 +2,7 @@
 
 import * as d3 from "d3";
 import {css} from "lit";
-import {MONTHS} from "../lib/utils.js";
+import {MONTHS, padString} from "../lib/utils.js";
 import Chart from "./Chart.js";
 
 /**
@@ -49,10 +49,10 @@ export default class Heatmap extends Chart {
 	 * @returns {{start: number, end: number}}
 	 */
 	get range() {
-		const firstYear = new Date(this.data[0].date).getUTCFullYear();
+		const firstYear = new Date(this.data[0].date).getFullYear();
 		const lastYear = new Date(
 			this.data[this.data.length - 1].date,
-		).getUTCFullYear();
+		).getFullYear();
 
 		return {
 			start: firstYear,
@@ -118,9 +118,17 @@ export default class Heatmap extends Chart {
 		return rawData.map((value) => {
 			const {date} = value;
 			const dateObject = new Date(date);
-			const iso = dateObject.toISOString();
-			const yyyymmdd = iso.substring(0, 10);
-			const time = iso.substring(11, 16);
+
+			// doesn't use toISOString because ISO assumes UTC
+			const year = dateObject.getFullYear();
+			const month = padString(dateObject.getMonth() + 1);
+			const day = padString(dateObject.getDate());
+			const yyyymmdd = `${year}-${month}-${day}`;
+
+			const hours = dateObject.getHours();
+			const minutes = dateObject.getMinutes();
+			const time = `${padString(hours)}:${padString(minutes)}`;
+
 			const intlDate = new Intl.DateTimeFormat(undefined, {
 				day: "numeric",
 				month: "long",
@@ -281,8 +289,7 @@ export default class Heatmap extends Chart {
 						const pointDate = data.find((entry) => entry.yyyymmdd === date);
 
 						tooltip.style("display", "block");
-						tooltip.html(pointDate.dateString
-						);
+						tooltip.html(pointDate.dateString);
 
 						const rect = this.tooltipElement.getBoundingClientRect();
 						const left =
@@ -300,7 +307,7 @@ export default class Heatmap extends Chart {
 		});
 	}
 
-  /** @override */
+	/** @override */
 	init() {
 		this.createHeatmap(this.data);
 	}

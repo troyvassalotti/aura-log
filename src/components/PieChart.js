@@ -1,6 +1,6 @@
 /** @format */
 
-import {createSeriesSimple} from "../lib/utils";
+import {createSeriesSimple, uniqueSorted} from "../lib/utils";
 import {Base} from "./Base";
 
 /**
@@ -19,34 +19,20 @@ export class PieChart extends Base {
 		this.logdata;
 	}
 
-	/**
-	 * Headache data filtered by the component's logdata.
-	 * @returns {FlatArray<*[], 1>[]}
-	 * @private
-	 */
-	get #values() {
+	createChartData() {
+		let values = [];
+
 		if (this.logdata) {
-			return Object.values(this._data)
+			values = Object.values(this._data)
 				.map((value) => value[this.logdata])
-				.flat();
+				.flat(Infinity);
 		}
 
-		return [];
+		const unique = uniqueSorted(values);
+
+		return createSeriesSimple(unique, values);
 	}
 
-	/**
-	 * De-duplicate the generated values
-	 * @see #values
-	 * @returns {*[]}
-	 * @private
-	 */
-	get #unique() {
-		return [...new Set(this.#values)].sort();
-	}
-
-	/**
-	 * Chart options.
-	 */
 	get chartOptions() {
 		return {
 			accessibility: {
@@ -79,7 +65,7 @@ export class PieChart extends Base {
 				{
 					name: this.logdata,
 					colorByPoint: true,
-					data: createSeriesSimple(this.#unique, this.#values),
+					data: this.createChartData(),
 				},
 			],
 			tooltip: {

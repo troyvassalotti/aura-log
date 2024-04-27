@@ -1,6 +1,6 @@
 /** @format */
 
-import { mode } from "d3";
+import {mode} from "d3";
 import {Base} from "./Base";
 
 /**
@@ -12,34 +12,15 @@ export class HistogramChart extends Base {
 		super();
 	}
 
-	/**
-	 * Values to chart.
-	 * @returns {number[]}
-	 */
-	get #values() {
-		return Object.values(this._data).map((value) =>
-			new Date(value.date).getHours(),
-		);
-	}
-
-	/**
-	 * The mode hour period where headaches happened.
-	 * @returns {number}
-	 */
-	get #topHour() {
-		return mode(this.#values, undefined);
-	}
-
-	/**
-	 * Chart options.
-	 */
 	get chartOptions() {
+		const data = Object.values(this._data);
+		const values = data.map((value) => new Date(value.date).getHours());
+		const topHour = mode(values);
+
 		return {
 			caption: {
-				text: `Worst Time of the Day? Between ${this.#topHour}:00-${
-					this.#topHour + 1
-				}:00
-        ${this.#topHour + 1 >= 12 ? "p.m." : "a.m."}`,
+				text: `Worst Time of the Day? Between ${topHour}:00-${topHour + 1}:00
+        ${topHour + 1 >= 12 ? "p.m." : "a.m."}`,
 			},
 			plotOptions: {
 				histogram: {
@@ -69,7 +50,7 @@ export class HistogramChart extends Base {
 				{
 					name: "Time",
 					type: "scatter",
-					data: this.#values,
+					data: values,
 					id: "s1",
 					marker: {
 						radius: 2.5,

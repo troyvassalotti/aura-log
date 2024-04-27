@@ -8,7 +8,6 @@ import "./Heatmap.js";
 export default class App extends AuralogElement {
 	static properties = {
 		src: {type: String},
-		appTitle: {type: String},
 	};
 
 	dataTask = new Task(this, {
@@ -30,7 +29,7 @@ export default class App extends AuralogElement {
 			complete: (data) => html`
 				<div id="app">
 					<header class="header">
-						<h1>${this.appTitle}</h1>
+						<slot name="title"></slot>
 						<p><a href="${this.src}">View raw data</a>.</p>
 					</header>
 					<heat-map

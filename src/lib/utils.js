@@ -28,14 +28,36 @@ export const DAYS = [
 ];
 
 /**
+ * Turn a value into a string and pad the start of it.
+ *
+ * @param {string} value Value to turn into a string
+ * @param {number} padCount Amount to pad
+ * @param {string} padWith String to pad with
+ * @returns {string}
+ */
+export function padString(value, padCount = 2, padWith = "0") {
+	return value.toString().padStart(padCount, padWith);
+}
+
+/**
  * Count how many of a given argument are in an array.
  *
  * @param {any[]} array
  * @param {string | number} what
  * @returns {number} Total of that value in the array.
  */
-function countInArray(array, what) {
+export function countInArray(array, what) {
 	return array.filter((item) => item == what).length;
+}
+
+/**
+ * Create a sorted set of arbitrary array values.
+ *
+ * @param {unknown[]} values
+ * @returns {Set}
+ */
+export function uniqueSorted(values) {
+	return [...new Set(values)].sort();
 }
 
 /**
@@ -68,9 +90,9 @@ export function sortListByDayOfWeek(value) {
 /**
  * A Highcharts-compatible data structure with Name and Number of occurrences in the given data.
  *
- * @param {any} set An array of unique values
- * @param {any} data The unfiltered dataset to compare against
- * @returns {any} Name-to-value pairings in an Array
+ * @param {unknown[]} set An array of unique values
+ * @param {unknown} data The unfiltered dataset to compare against
+ * @returns {Record<string: string, string: number>[]} Name-to-value pairings in an Array
  */
 export function createSeriesSimple(set, data) {
 	if (set && data) {
@@ -84,4 +106,3 @@ export function createSeriesSimple(set, data) {
 		});
 	}
 }
-

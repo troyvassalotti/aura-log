@@ -1,6 +1,11 @@
 /** @format */
 
-import {createSeriesSimple, DAYS, sortListByDayOfWeek} from "../lib/utils";
+import {
+	createSeriesSimple,
+	DAYS,
+	sortListByDayOfWeek,
+	uniqueSorted,
+} from "../lib/utils";
 import {Base} from "./Base";
 
 /**
@@ -19,48 +24,17 @@ export class BarChart extends Base {
 		this.type = "bar";
 	}
 
-	/**
-	 * Headache data transformed to store the date as a numeric value.
-	 * @returns {number[]}
-	 * @private
-	 */
-	get #values() {
-		return Object.values(this._data).map((value) =>
-			new Date(value.date).getDay(),
-		);
+	createChartData() {
+		const data = Object.values(this._data);
+		const values = data.map((value) => new Date(value.date).getDay());
+		const unique = uniqueSorted(values);
+
+		const days = values.map((value) => sortListByDayOfWeek(value));
+		const filteredDays = unique.map((value) => sortListByDayOfWeek(value));
+
+		return createSeriesSimple(filteredDays, days);
 	}
 
-	/**
-	 * All the days that a headache has occurred on.
-	 * @returns {string[]}
-	 * @private
-	 */
-	get #days() {
-		return this.#values.map((value) => sortListByDayOfWeek(value));
-	}
-
-	/**
-	 * De-duplicate the generated date values.
-	 * @see #values
-	 * @returns {number[]}
-	 * @private
-	 */
-	get #unique() {
-		return [...new Set(this.#values)].sort();
-	}
-
-	/**
-	 * All the days now filtered to only include one of each.
-	 * @returns {string[]}
-	 * @private
-	 */
-	get #filteredDays() {
-		return this.#unique.map((value) => sortListByDayOfWeek(value));
-	}
-
-	/**
-	 * Chart options.
-	 */
 	get chartOptions() {
 		return {
 			chart: {
@@ -72,7 +46,7 @@ export class BarChart extends Base {
 			series: [
 				{
 					name: "Headaches",
-					data: createSeriesSimple(this.#filteredDays, this.#days),
+					data: this.createChartData(),
 				},
 			],
 			xAxis: {

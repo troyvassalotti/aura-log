@@ -31,9 +31,9 @@
 	</head>
 	<body>
 		<main class="flow">
-			<aura-log
-				src="/headaches.json"
-				apptitle="{{title}}"></aura-log>
+			<aura-log src="/headaches.json">
+				<h1 slot="title">{{title}}</h1>
+			</aura-log>
 			<bar-chart charttitle="Migraines by Day of Week"></bar-chart>
 			<histogram-chart charttitle="Migraines by Hour of Day"></histogram-chart>
 			<pie-chart
