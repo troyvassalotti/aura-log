@@ -8,6 +8,7 @@ import "./Dashboard.js";
 
 export default class App extends AuralogElement {
 	static properties = {
+		appTitle: {type: String},
 		src: {type: String},
 	};
 
@@ -28,16 +29,16 @@ export default class App extends AuralogElement {
 		return this.dataTask.render({
 			pending: () => html`<p>Loading Aura Log...</p>`,
 			complete: (data) => html`
-				<div id="app">
-					<header class="header">
-						<slot name="title"></slot>
-						<p><a href="${this.src}">View raw data</a>.</p>
-					</header>
+				<header class="header">
+					<h1>${this.appTitle}</h1>
+					<p><a href="${this.src}">View raw data</a>.</p>
+				</header>
+				<main>
 					<heat-map
 						.data=${data}
 						theme="blue"></heat-map>
 					<dash-board .data=${data}></dash-board>
-				</div>
+				</main>
 			`,
 			error: (e) => html`<p>Error: ${e}</p>`,
 		});

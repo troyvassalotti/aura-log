@@ -92,13 +92,4 @@
 	body {
 		font-family: system-ui;
 	}
-
-	.flow > *:not(:first-child) {
-		margin-block-start: 4em;
-	}
-
-	.header {
-		margin-block-end: 2em;
-		text-align: center;
-	}
 }
