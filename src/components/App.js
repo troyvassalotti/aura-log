@@ -1,9 +1,8 @@
 /** @format */
 
-import {html} from "lit";
+import {css, html} from "lit";
 import {Task} from "@lit/task";
 import AuralogElement from "./AuralogElement.js";
-import "./Heatmap.js";
 import "./Dashboard.js";
 
 export default class App extends AuralogElement {
@@ -11,6 +10,17 @@ export default class App extends AuralogElement {
 		appTitle: {type: String},
 		src: {type: String},
 	};
+
+	static get styles() {
+		return [
+			super.styles,
+			css`
+				:host {
+					padding: 1rem;
+				}
+			`,
+		];
+	}
 
 	dataTask = new Task(this, {
 		task: async ([source], {signal}) => {
@@ -34,9 +44,6 @@ export default class App extends AuralogElement {
 					<p><a href="${this.src}">View raw data</a>.</p>
 				</header>
 				<main>
-					<heat-map
-						.data=${data}
-						theme="blue"></heat-map>
 					<dash-board .data=${data}></dash-board>
 				</main>
 			`,

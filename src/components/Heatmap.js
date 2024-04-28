@@ -14,6 +14,11 @@ export default class Heatmap extends Chart {
 		theme: {type: String},
 	};
 
+	constructor() {
+		super();
+		this.theme = "blue";
+	}
+
 	static styles = [
 		super.styles,
 		css`

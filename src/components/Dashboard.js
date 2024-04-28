@@ -6,6 +6,7 @@ import Histogram from "highcharts/modules/histogram-bellcurve";
 import {mode} from "d3";
 import {html, css} from "lit";
 import AuralogElement from "./AuralogElement.js";
+import "./Heatmap.js";
 import {
 	uniqueSorted,
 	sortListByDayOfWeek,
@@ -21,51 +22,74 @@ export default class Dashboard extends AuralogElement {
 		return [
 			super.styles,
 			css`
-				.dashboard {
-					display: grid;
-					gap: 1rem;
-				}
-
+				:host,
 				.row {
 					display: grid;
 					gap: 1rem;
-					grid-row: auto / span var(--row-span, 1);
-					grid-template-columns: repeat(6, 1fr);
-
-					&.span-2 {
-						--row-span: 2;
-					}
-
-					&.span-3 {
-						--row-span: 3;
-					}
-
-					&.span-4 {
-						--row-span: 4;
-					}
 				}
 
-				.column {
-					grid-column: auto / span var(--col-span, 1);
+				.stack {
+					display: flex;
+					flex-direction: column;
+					gap: 1rem;
+				}
 
-					&.span-2 {
-						--col-span: 2;
+				.cell {
+					--shadow-color: 4, 9, 20;
+					--shadow-opacity: 0.03;
+
+					border-radius: 4px;
+					box-shadow:
+						0 0.4688rem 2.1875rem
+							rgba(var(--shadow-color), var(--shadow-opacity)),
+						0 0.9375rem 1.4063rem
+							rgba(var(--shadow-color), var(--shadow-opacity)),
+						0 0.25rem 0.5313rem rgba(var(--shadow-color), var(--shadow-opacity)),
+						0 0.125rem 0.1875rem
+							rgba(var(--shadow-color), var(--shadow-opacity));
+					padding: 1rem;
+				}
+
+				@media (width >= 768px) {
+					.row {
+						grid-row: auto / span var(--row-span, 1);
+						grid-template-columns: repeat(6, 1fr);
+
+						&.span-2 {
+							--row-span: 2;
+						}
+
+						&.span-3 {
+							--row-span: 3;
+						}
+
+						&.span-4 {
+							--row-span: 4;
+						}
 					}
 
-					&.span-3 {
-						--col-span: 3;
-					}
+					.column {
+						grid-column: auto / span var(--col-span, 1);
 
-					&.span-4 {
-						--col-span: 4;
-					}
+						&.span-2 {
+							--col-span: 2;
+						}
 
-					&.span-5 {
-						--col-span: 5;
-					}
+						&.span-3 {
+							--col-span: 3;
+						}
 
-					&.span-6 {
-						--col-span: 6;
+						&.span-4 {
+							--col-span: 4;
+						}
+
+						&.span-5 {
+							--col-span: 5;
+						}
+
+						&.span-6 {
+							--col-span: 6;
+						}
 					}
 				}
 			`,
@@ -105,32 +129,39 @@ export default class Dashboard extends AuralogElement {
 
 	render() {
 		return html`
-			<div class="dashboard">
-				<div class="row">
-					<div
-						class="column span-3"
-						id="bar"></div>
-					<div
-						class="column span-3"
-						id="triggers"></div>
+			<div class="row">
+				<div class="column cell span-6">
+					<heat-map .data=${this.data}></heat-map>
 				</div>
-				<div class="row">
-					<div class="column span-2">
-						<div id="sleep"></div>
-						<div id="pain-areas"></div>
-					</div>
+			</div>
+			<div class="row">
+				<div
+					class="column cell span-3"
+					id="bar"></div>
+				<div
+					class="column cell span-3"
+					id="triggers"></div>
+			</div>
+			<div class="row">
+				<div class="column stack span-2">
 					<div
-						class="column span-4"
-						id="histogram"></div>
+						class="cell"
+						id="sleep"></div>
+					<div
+						class="cell"
+						id="pain-areas"></div>
 				</div>
-				<div class="row">
-					<div
-						class="column span-3"
-						id="medications"></div>
-					<div
-						class="column span-3"
-						id="symptoms"></div>
-				</div>
+				<div
+					class="column cell span-4"
+					id="histogram"></div>
+			</div>
+			<div class="row">
+				<div
+					class="column cell span-3"
+					id="medications"></div>
+				<div
+					class="column cell span-3"
+					id="symptoms"></div>
 			</div>
 		`;
 	}
