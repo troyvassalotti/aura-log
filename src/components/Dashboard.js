@@ -179,6 +179,9 @@ export default class Dashboard extends AuralogElement {
 		Highcharts.setOptions({
 			chart: {
 				animation: false,
+				style: {
+					fontFamily: "inherit",
+				},
 			},
 			credits: {
 				enabled: false,
@@ -187,6 +190,11 @@ export default class Dashboard extends AuralogElement {
 				alignColumns: false,
 			},
 			plotOptions: {
+				pie: {
+					dataLabels: {
+						enabled: false,
+					},
+				},
 				series: {
 					states: {
 						hover: {
@@ -195,8 +203,24 @@ export default class Dashboard extends AuralogElement {
 					},
 				},
 			},
-			title: {
-				text: "",
+			responsive: {
+				rules: [
+					{
+						condition: {
+							minWidth: 400,
+						},
+						chartOptions: {
+							plotOptions: {
+								pie: {
+									dataLabels: {
+										distance: 10,
+										enabled: true,
+									},
+								},
+							},
+						},
+					},
+				],
 			},
 		});
 
@@ -229,8 +253,8 @@ export default class Dashboard extends AuralogElement {
 
 		Highcharts.chart(histogramContainer, {
 			caption: {
-				text: `Worst Time of the Day? Between ${topHour}:00-${topHour + 1}:00
-        ${topHour + 1 >= 12 ? "p.m." : "a.m."}`,
+				text: `By analyzing the times of each migraine, the hour of the day where migraine onset is most frequent is between <b>${topHour}:00-${topHour + 1}:00
+        ${topHour + 1 >= 12 ? "p.m." : "a.m."}</b>`,
 			},
 			plotOptions: {
 				histogram: {
@@ -267,6 +291,9 @@ export default class Dashboard extends AuralogElement {
 					type: "scatter",
 				},
 			],
+			subtitle: {
+				text: "Buckets of time are chunked in sizes of 4.",
+			},
 			title: {
 				text: "Migraines by Hour of Day",
 			},
@@ -317,6 +344,9 @@ export default class Dashboard extends AuralogElement {
 					data: this.createPieChartData("triggers"),
 				},
 			],
+			title: {
+				text: "Possible Triggers",
+			},
 			tooltip: {
 				pointFormat: "Count: <b>{point.y}</b>",
 			},
@@ -349,6 +379,7 @@ export default class Dashboard extends AuralogElement {
 					data: this.createPieChartData("pain_areas"),
 				},
 			],
+			title: {text: "Where Pain Was Felt"},
 			tooltip: {
 				pointFormat: "Count: <b>{point.y}</b>",
 			},
@@ -391,6 +422,9 @@ export default class Dashboard extends AuralogElement {
 					data: this.createPieChartData("sleep"),
 				},
 			],
+			title: {
+				text: "Onset Period",
+			},
 			tooltip: {
 				headerFormat: "",
 				pointFormat: "Count: <b>{point.y}</b>",
@@ -424,6 +458,9 @@ export default class Dashboard extends AuralogElement {
 					data: this.createPieChartData("symptoms"),
 				},
 			],
+			title: {
+				text: "Symptoms Experienced",
+			},
 			tooltip: {
 				pointFormat: "Count: <b>{point.y}</b>",
 			},
@@ -456,8 +493,13 @@ export default class Dashboard extends AuralogElement {
 					data: this.createPieChartData("medications"),
 				},
 			],
+			title: {
+				text: "Medications Used",
+			},
 			tooltip: {
-				pointFormat: "Count: <b>{point.y}</b>",
+				pointFormatter() {
+					return `<b>${this.y} / ${Math.round(this.percentage)}%</b>`;
+				},
 			},
 		});
 	}
