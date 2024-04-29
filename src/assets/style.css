@@ -90,15 +90,7 @@
 
 @layer app {
 	body {
-		font-family: system-ui;
-	}
-
-	.flow > *:not(:first-child) {
-		margin-block-start: 4em;
-	}
-
-	.header {
-		margin-block-end: 2em;
-		text-align: center;
+		background-color: snow;
+		font-family: "DM Sans";
 	}
 }
