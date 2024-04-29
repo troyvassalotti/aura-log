@@ -90,6 +90,7 @@
 
 @layer app {
 	body {
+		background-color: snow;
 		font-family: "DM Sans";
 	}
 }

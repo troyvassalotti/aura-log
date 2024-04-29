@@ -37,28 +37,25 @@ export default class App extends AuralogElement {
 					--space-xl: clamp(3.375rem, 3.2446rem + 0.6522vi, 3.75rem);
 					--space-2xl: clamp(4.5rem, 4.3261rem + 0.8696vi, 5rem);
 					--space-3xl: clamp(6.75rem, 6.4891rem + 1.3043vi, 7.5rem);
-
-					padding: 1rem;
 				}
 
 				.loading-body {
-					font-size: var(--step-3);
-					text-align: center;
+					font-size: var(--step-2);
 				}
 
-				.header {
-					display: flex;
-					flex-direction: column;
+				.monospace {
+					font-family: monospace;
+				}
+
+				main {
+					padding: 1rem;
+				}
+
+				footer {
 					font-size: var(--step-0);
-					gap: var(--space-3xs);
+					padding-block: 2rem;
+					padding-inline: 1rem;
 					text-align: center;
-				}
-
-				.divider {
-					border: 2px solid black;
-					inline-size: min(320px, 50vw);
-					margin-block: var(--space-s);
-					margin-inline: auto;
 				}
 			`,
 		];
@@ -81,19 +78,18 @@ export default class App extends AuralogElement {
 		return this.dataTask.render({
 			pending: () => html`
 				<main class="loading-body">
-					<h1>Loading Aura Log...</h1>
+					<h1 class="monospace">Loading Aura Log...</h1>
 					<loading-spinner></loading-spinner>
 				</main>
 			`,
 			complete: (data) => html`
-				<header class="header">
-					<h1>${this.appTitle}</h1>
-					<p><a href="${this.src}">View raw data</a>.</p>
-					<hr class="divider" />
-				</header>
 				<main>
 					<dash-board .data=${data}></dash-board>
 				</main>
+				<footer>
+					<h1>${this.appTitle}</h1>
+					<p><a href="${this.src}">View raw data</a>.</p>
+				</footer>
 			`,
 			error: (e) => html`<p>Error: ${e}</p>`,
 		});
