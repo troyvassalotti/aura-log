@@ -179,6 +179,7 @@ export default class Dashboard extends AuralogElement {
 		Highcharts.setOptions({
 			chart: {
 				animation: false,
+        backgroundColor: "snow",
 				style: {
 					fontFamily: "inherit",
 				},
