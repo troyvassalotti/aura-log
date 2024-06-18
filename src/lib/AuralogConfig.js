@@ -62,6 +62,7 @@ export class AuralogConfig {
 			"Sun",
 			"Hunger",
 		],
+		intensities: ["low", "medium", "high"],
 	};
 
 	config = null;

@@ -103,6 +103,15 @@ if (!config.disableMedications) {
 	});
 }
 
+if (!config.disableIntensity) {
+	prompts.push({
+		type: "list",
+		name: "intensity",
+		message: "What was the intensity level?",
+		choices: config.intensities,
+	});
+}
+
 /**
  * @todo
  * Figure out how to pass custom prompts into the plop template.

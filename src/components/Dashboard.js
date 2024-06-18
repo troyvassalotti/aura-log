@@ -157,11 +157,14 @@ export default class Dashboard extends AuralogElement {
 			</div>
 			<div class="row">
 				<div
-					class="column cell span-3"
+					class="column cell span-2"
 					id="medications"></div>
 				<div
-					class="column cell span-3"
+					class="column cell span-2"
 					id="symptoms"></div>
+				<div
+					class="column cell span-2"
+					id="intensity"></div>
 			</div>
 		`;
 	}
@@ -174,12 +177,13 @@ export default class Dashboard extends AuralogElement {
 		const pieChartPainAreasContainer = this.query("#pain-areas");
 		const pieChartMedicationsContainer = this.query("#medications");
 		const pieChartSymptomsContainer = this.query("#symptoms");
+		const pieChartIntensityContainer = this.query("#intensity");
 		const {topHour, data: histogramData} = this.createHistogramData();
 
 		Highcharts.setOptions({
 			chart: {
 				animation: false,
-        backgroundColor: "snow",
+				backgroundColor: "snow",
 				style: {
 					fontFamily: "inherit",
 				},
@@ -496,6 +500,43 @@ export default class Dashboard extends AuralogElement {
 			],
 			title: {
 				text: "Medications Used",
+			},
+			tooltip: {
+				pointFormatter() {
+					return `<b>${this.y} / ${Math.round(this.percentage)}%</b>`;
+				},
+			},
+		});
+
+		Highcharts.chart(pieChartIntensityContainer, {
+			accessibility: {
+				point: {
+					valueSuffix: "%",
+				},
+			},
+			chart: {
+				type: "pie",
+			},
+			legend: {
+				labelFormatter() {
+					return `${this.name}: <b>${Math.round(this.percentage)}%</b>`;
+				},
+			},
+			plotOptions: {
+				pie: {
+					innerSize: "50%",
+					showInLegend: true,
+				},
+			},
+			series: [
+				{
+					name: "Intensities",
+					colorByPoint: true,
+					data: this.createPieChartData("intensity"),
+				},
+			],
+			title: {
+				text: "Intensity Levels",
 			},
 			tooltip: {
 				pointFormatter() {

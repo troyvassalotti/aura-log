@@ -96,13 +96,17 @@ export function sortListByDayOfWeek(value) {
  */
 export function createSeriesSimple(set, data) {
 	if (set && data) {
-		const dataMap = set.map((value) => [value, countInArray(data, value)]);
+		const dataMap = set
+			.filter((value) => typeof value !== "undefined")
+			.map((value) => [value, countInArray(data, value)]);
 
-		return dataMap.map((value) => {
+		const series = dataMap.map((value) => {
 			return {
 				name: value[0],
 				y: value[1],
 			};
 		});
+
+		return series;
 	}
 }

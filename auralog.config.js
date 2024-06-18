@@ -18,4 +18,5 @@ export default {
 	parseJournal: true,
 	symptoms: ["Sadness"],
 	triggers: ["Solar Eclipse"],
+	intensities: ["Super High"],
 };
