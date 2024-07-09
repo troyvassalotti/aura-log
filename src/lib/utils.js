@@ -67,7 +67,7 @@ export function uniqueSorted(values) {
  * @returns {string[]}
  */
 export function sortListByDayOfWeek(value) {
-	if (value) {
+	if (typeof value === "number") {
 		switch (value) {
 			case 0:
 				return DAYS[value];
