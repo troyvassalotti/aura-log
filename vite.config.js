@@ -20,15 +20,15 @@ class ViteConfig {
 	static configFileName = "vite.config.js";
 
 	static get userConfigPath() {
-		return resolve(this.cwd(), this.configFileName);
+		return resolve(this.cwd, this.configFileName);
 	}
 
 	static async fetchUserConfig() {
 		try {
 			const userConfig = await import(this.userConfigPath);
 			return userConfig.default;
-		} catch (error) {
-			console.error(error);
+		} catch (_error) {
+			console.log("No user vite config found. Using defaults...");
 			return {};
 		}
 	}
