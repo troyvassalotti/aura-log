@@ -1,7 +1,12 @@
 /** @format */
 
 import Highcharts from "highcharts";
+/* Component just needs to import the code and do nothing with it */
+/* eslint-disable-next-line no-unused-vars */
 import Accessibility from "highcharts/modules/accessibility";
+
+/* Component just needs to import the code and do nothing with it */
+/* eslint-disable-next-line no-unused-vars */
 import Histogram from "highcharts/modules/histogram-bellcurve";
 import {mode} from "d3";
 import {html, css} from "lit";
@@ -13,9 +18,6 @@ import {
 	createSeriesSimple,
 	DAYS,
 } from "../lib/utils.js";
-
-Accessibility(Highcharts);
-Histogram(Highcharts);
 
 export default class Dashboard extends AuralogElement {
 	static get styles() {
