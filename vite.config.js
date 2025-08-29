@@ -27,8 +27,8 @@ class ViteConfig {
 		try {
 			const userConfig = await import(this.userConfigPath);
 			return userConfig.default;
-		} catch (_error) {
-			console.log("No user vite config found. Using defaults...");
+		} catch (error) {
+			console.log("No user vite config found. Using defaults...", error);
 			return {};
 		}
 	}
