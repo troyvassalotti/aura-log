@@ -21,6 +21,8 @@
 	"scripts": {
 		"build": "npx auralog build",
 		"dev": "npx auralog dev",
+		"deploy": "npx netlify deploy --prod",
+		"predeploy": "npm run build",
 		"lint::prettier": "prettier --check .",
 		"lint::prettier-fix": "prettier --write .",
 		"lint::eslint": "eslint",
